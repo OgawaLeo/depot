@@ -4,10 +4,10 @@ class ProductTest < ActiveSupport::TestCase
 
   setup do
     @test = Product.new(
-        title:       'Lorem Ipsum',
+        title: 'Lorem Ipsum',
         description: 'Wibbles are fun!',
-        image_url:   'lorem.jpg',
-        price:       19.95
+        image_url: 'lorem.jpg',
+        price: 19.95
     )
   end
 
@@ -23,11 +23,13 @@ class ProductTest < ActiveSupport::TestCase
   test 'product price must be postive and greater than 0.01' do
     @test.price = -1
     assert @test.invalid?
-    # assert_equal [I18n.translate('errors.messages.greater_than_or_equal_to')], @test.errors[:price]
+    # get the value of instance_variable: instance_variable_get("@options")
+    count = Product.validators_on(:price)[0].instance_variable_get("@options")[:greater_than_or_equal_to]
+    assert_equal [I18n.translate('errors.messages.greater_than_or_equal_to', count: count)], @test.errors[:price]
 
     @test.price = 0
     assert @test.invalid?
-    # assert_equal [I18n.translate('errors.messages.greater_than_or_equal_to')], @test.errors[:price]
+    assert_equal [I18n.translate('errors.messages.greater_than_or_equal_to', count: count)], @test.errors[:price]
 
     @test.price = 1
     assert @test.valid?
