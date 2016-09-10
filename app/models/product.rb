@@ -13,4 +13,8 @@ class Product < ApplicationRecord
   validates :title, length: {minimum: 5}
   # validates :title, length: 10
   # validates :title, length: 10..20
+
+  def self.latest
+    Product.order(:updated_at).last
+  end
 end
